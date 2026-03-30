@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import net.talaatharb.gsplat.model.Project;
 
 import java.io.IOException;
@@ -94,11 +93,15 @@ public class MainController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/settings.fxml"));
             DialogPane dialogPane = loader.load();
+            SettingsController settingsController = loader.getController();
 
-            Dialog<Void> dialog = new Dialog<>();
+            Dialog<ButtonType> dialog = new Dialog<>();
             dialog.setTitle("Settings");
             dialog.setDialogPane(dialogPane);
-            dialog.showAndWait();
+            Optional<ButtonType> result = dialog.showAndWait();
+            if (result.isPresent() && result.get() == ButtonType.APPLY) {
+                settingsController.saveSettings();
+            }
         } catch (IOException e) {
             appendLog("ERROR: Failed to open settings: " + e.getMessage());
         }

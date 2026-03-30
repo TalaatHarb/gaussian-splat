@@ -1,36 +1,66 @@
 package net.talaatharb.gsplat.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import net.talaatharb.gsplat.model.AppSettings;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 public class PythonEnvService {
 
     private static final Path SETTINGS_DIR = Path.of(System.getProperty("user.home"), ".gsplat");
-    private static final Path SETTINGS_FILE = SETTINGS_DIR.resolve("settings.json");
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Path SETTINGS_FILE = SETTINGS_DIR.resolve("settings.properties");
 
     public AppSettings loadSettings() {
+        AppSettings settings = new AppSettings();
         try {
             if (Files.exists(SETTINGS_FILE)) {
-                String json = Files.readString(SETTINGS_FILE);
-                return GSON.fromJson(json, AppSettings.class);
+                Properties props = new Properties();
+                try (InputStream in = Files.newInputStream(SETTINGS_FILE)) {
+                    props.load(in);
+                }
+                settings.setFfmpegPath(props.getProperty("ffmpegPath", ""));
+                settings.setColmapPath(props.getProperty("colmapPath", ""));
+                settings.setPythonPath(props.getProperty("pythonPath", ""));
+                settings.setGaussianSplattingRepoPath(props.getProperty("gaussianSplattingRepoPath", ""));
+                settings.setCondaPath(props.getProperty("condaPath", ""));
+                settings.setCondaEnvName(props.getProperty("condaEnvName", ""));
+                String gpuDevice = props.getProperty("gpuDevice", "0");
+                try {
+                    settings.setGpuDevice(Integer.parseInt(gpuDevice));
+                } catch (NumberFormatException ignored) {
+                    settings.setGpuDevice(0);
+                }
             }
         } catch (IOException e) {
             // Fall through to defaults
         }
-        return new AppSettings();
+        return settings;
     }
 
     public void saveSettings(AppSettings settings) throws IOException {
         Files.createDirectories(SETTINGS_DIR);
-        Files.writeString(SETTINGS_FILE, GSON.toJson(settings));
+        Properties props = new Properties();
+        props.setProperty("ffmpegPath", valueOrEmpty(settings.getFfmpegPath()));
+        props.setProperty("colmapPath", valueOrEmpty(settings.getColmapPath()));
+        props.setProperty("pythonPath", valueOrEmpty(settings.getPythonPath()));
+        props.setProperty("gaussianSplattingRepoPath", valueOrEmpty(settings.getGaussianSplattingRepoPath()));
+        props.setProperty("condaPath", valueOrEmpty(settings.getCondaPath()));
+        props.setProperty("condaEnvName", valueOrEmpty(settings.getCondaEnvName()));
+        props.setProperty("gpuDevice", Integer.toString(settings.getGpuDevice()));
+
+        try (OutputStream out = Files.newOutputStream(SETTINGS_FILE)) {
+            props.store(out, "Gaussian Splat Studio settings");
+        }
+    }
+
+    private String valueOrEmpty(String value) {
+        return value == null ? "" : value;
     }
 
     /**
