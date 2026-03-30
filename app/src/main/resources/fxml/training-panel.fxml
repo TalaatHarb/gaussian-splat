@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="net.talaatharb.gsplat.ui.TrainingPanelController"
+      spacing="10">
+    <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+    <!-- Configuration Section -->
+    <TitledPane text="Training Configuration" expanded="true">
+        <GridPane hgap="10" vgap="8">
+            <padding><Insets top="8" right="8" bottom="8" left="8"/></padding>
+
+            <Label text="Source Path:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <HBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                <TextField fx:id="sourcePathField" promptText="COLMAP output directory"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseSource"/>
+            </HBox>
+
+            <Label text="Output Path:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <HBox spacing="6" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                <TextField fx:id="outputPathField" promptText="Model output directory"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseOutput"/>
+            </HBox>
+
+            <Label text="Iterations:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <Spinner fx:id="iterationsSpinner" prefWidth="120"
+                     GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+            <Label text="Position LR (init):" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="posLrInitField" text="0.00016"
+                       GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+
+            <Label text="Scaling LR:" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="scalingLrField" text="0.005"
+                       GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+
+            <Label text="Optimizer:" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="optimizerCombo" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+
+            <CheckBox fx:id="antialiasingCheck" text="Anti-aliasing"
+                      GridPane.rowIndex="6" GridPane.columnIndex="0"/>
+            <CheckBox fx:id="evalCheck" text="Train/Test Split"
+                      GridPane.rowIndex="6" GridPane.columnIndex="1"/>
+
+            <columnConstraints>
+                <ColumnConstraints minWidth="130" prefWidth="130"/>
+                <ColumnConstraints hgrow="ALWAYS"/>
+            </columnConstraints>
+        </GridPane>
+    </TitledPane>
+
+    <!-- Controls -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Button fx:id="startBtn" text="Start Training" onAction="#onStartTraining" styleClass="button"/>
+        <Button fx:id="pauseBtn" text="Pause" onAction="#onPauseTraining" disable="true" styleClass="button"/>
+        <Button fx:id="cancelBtn" text="Cancel" onAction="#onCancelTraining" disable="true" styleClass="button"/>
+        <Separator orientation="VERTICAL"/>
+        <Label fx:id="statusLabel" text="Ready"/>
+    </HBox>
+
+    <!-- Progress -->
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="Progress:"/>
+        <ProgressBar fx:id="progressBar" prefWidth="300" progress="0"/>
+        <Label fx:id="iterLabel" text="0 / 30000"/>
+    </HBox>
+
+    <!-- Charts -->
+    <HBox spacing="10" VBox.vgrow="ALWAYS">
+        <LineChart fx:id="lossChart" HBox.hgrow="ALWAYS" createSymbols="false">
+            <xAxis><NumberAxis label="Iteration" fx:id="lossXAxis"/></xAxis>
+            <yAxis><NumberAxis label="Loss" fx:id="lossYAxis"/></yAxis>
+        </LineChart>
+        <LineChart fx:id="psnrChart" HBox.hgrow="ALWAYS" createSymbols="false">
+            <xAxis><NumberAxis label="Iteration" fx:id="psnrXAxis"/></xAxis>
+            <yAxis><NumberAxis label="PSNR (dB)" fx:id="psnrYAxis"/></yAxis>
+        </LineChart>
+    </HBox>
+
+    <!-- Training Log -->
+    <TitledPane text="Training Log" VBox.vgrow="SOMETIMES">
+        <TextArea fx:id="trainingLog" editable="false" wrapText="true"
+                  prefHeight="150" styleClass="log-console"/>
+    </TitledPane>
+</VBox>

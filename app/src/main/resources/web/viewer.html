@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaussian Splat Viewer</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #1e1e1e;
+            color: #ccc;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+        #viewer-container {
+            width: 100%;
+            height: 100%;
+        }
+        #loading-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 100;
+        }
+        #loading-overlay.hidden { display: none; }
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #3c3c3c;
+            border-top: 3px solid #4a9eff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 12px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #status-bar {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            font-size: 11px;
+            color: #969696;
+            z-index: 10;
+        }
+        #no-splat-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #969696;
+        }
+        #no-splat-message h2 {
+            color: #cccccc;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="viewer-container"></div>
+    <div id="loading-overlay" class="hidden">
+        <div class="loading-spinner"></div>
+        <div>Loading splat...</div>
+    </div>
+    <div id="no-splat-message">
+        <h2>Gaussian Splat Viewer</h2>
+        <p>No splat loaded. Open a .ply or .ksplat file to begin.</p>
+    </div>
+    <div id="status-bar">Ready</div>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.164.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.164.0/examples/jsm/",
+            "@mkkellogg/gaussian-splats-3d": "https://unpkg.com/@mkkellogg/gaussian-splats-3d@0.4.8/build/gaussian-splats-3d.module.min.js"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as GaussianSplats3D from '@mkkellogg/gaussian-splats-3d';
+
+        let viewer = null;
+        const container = document.getElementById('viewer-container');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const noSplatMessage = document.getElementById('no-splat-message');
+        const statusBar = document.getElementById('status-bar');
+
+        function setStatus(msg) {
+            statusBar.textContent = msg;
+        }
+
+        // --- Bridge API for JavaFX WebEngine ---
+        window.viewerBridge = {
+            loadSplat: function(url) {
+                loadSplatFile(url);
+            },
+            setTransparency: function(value) {
+                // value: 0.0 - 1.0
+                if (viewer && viewer.splatMesh) {
+                    viewer.splatMesh.material.opacity = value;
+                    viewer.splatMesh.material.transparent = value < 1.0;
+                }
+            },
+            setPointScale: function(value) {
+                // Adjust splat scale
+                if (viewer && viewer.splatMesh) {
+                    viewer.splatMesh.scale.set(value, value, value);
+                }
+            },
+            resetCamera: function() {
+                if (viewer) {
+                    viewer.controls && viewer.controls.reset && viewer.controls.reset();
+                }
+            },
+            setCameraPosition: function(x, y, z) {
+                if (viewer && viewer.camera) {
+                    viewer.camera.position.set(x, y, z);
+                }
+            },
+            getStatus: function() {
+                return viewer ? 'loaded' : 'empty';
+            },
+            dispose: function() {
+                if (viewer) {
+                    viewer.dispose();
+                    viewer = null;
+                }
+            }
+        };
+
+        async function loadSplatFile(url) {
+            try {
+                loadingOverlay.classList.remove('hidden');
+                noSplatMessage.style.display = 'none';
+                setStatus('Loading: ' + url);
+
+                // Dispose previous viewer
+                if (viewer) {
+                    viewer.dispose();
+                    viewer = null;
+                    container.innerHTML = '';
+                }
+
+                viewer = new GaussianSplats3D.Viewer({
+                    cameraUp: [0, -1, 0],
+                    initialCameraPosition: [0, -2, 6],
+                    initialCameraLookAt: [0, 0, 0],
+                    rootElement: container,
+                    sharedMemoryForWorkers: false
+                });
+
+                await viewer.addSplatScene(url, {
+                    showLoadingUI: false,
+                    progressiveLoad: true
+                });
+
+                viewer.start();
+                loadingOverlay.classList.add('hidden');
+                setStatus('Loaded: ' + url.split('/').pop());
+
+            } catch (err) {
+                loadingOverlay.classList.add('hidden');
+                setStatus('Error: ' + err.message);
+                console.error('Failed to load splat:', err);
+            }
+        }
+
+        setStatus('Viewer ready');
+    </script>
+</body>
+</html>

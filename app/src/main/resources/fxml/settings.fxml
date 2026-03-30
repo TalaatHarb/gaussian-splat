@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="net.talaatharb.gsplat.ui.SettingsController"
+            prefWidth="600" prefHeight="480">
+
+    <headerText>Application Settings</headerText>
+
+    <content>
+        <VBox spacing="14">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+            <Label text="Tool Paths" styleClass="wizard-step-title"/>
+            <Label text="Configure paths to external tools. Click 'Auto-Detect' to scan your system." styleClass="wizard-description"/>
+
+            <Button text="Auto-Detect All" onAction="#onAutoDetect" styleClass="toolbar-btn"/>
+
+            <Separator/>
+
+            <!-- FFmpeg -->
+            <Label text="FFmpeg"/>
+            <HBox spacing="8">
+                <TextField fx:id="ffmpegPathField" promptText="Path to ffmpeg executable"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseFFmpeg"/>
+            </HBox>
+
+            <!-- COLMAP -->
+            <Label text="COLMAP"/>
+            <HBox spacing="8">
+                <TextField fx:id="colmapPathField" promptText="Path to colmap executable"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseColmap"/>
+            </HBox>
+
+            <!-- Python -->
+            <Label text="Python Interpreter"/>
+            <HBox spacing="8">
+                <TextField fx:id="pythonPathField" promptText="Path to python executable"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowsePython"/>
+            </HBox>
+
+            <!-- Gaussian Splatting Repo -->
+            <Label text="Gaussian Splatting Repository"/>
+            <HBox spacing="8">
+                <TextField fx:id="gsRepoPathField" promptText="Path to gaussian-splatting repo"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseGsRepo"/>
+            </HBox>
+
+            <Separator/>
+
+            <!-- Conda -->
+            <Label text="Conda Environment (optional)"/>
+            <HBox spacing="8">
+                <TextField fx:id="condaPathField" promptText="Path to conda executable"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseConda"/>
+            </HBox>
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Conda Env Name:"/>
+                <TextField fx:id="condaEnvField" promptText="e.g. gaussian_splatting" prefWidth="200"/>
+            </HBox>
+
+            <!-- GPU -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="GPU Device:"/>
+                <Spinner fx:id="gpuSpinner" prefWidth="80"/>
+            </HBox>
+
+            <Label fx:id="statusLabel" text="" styleClass="wizard-description"/>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:constant="APPLY"/>
+        <ButtonType fx:constant="CANCEL"/>
+    </buttonTypes>
+</DialogPane>

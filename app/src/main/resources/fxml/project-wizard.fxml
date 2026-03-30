@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="net.talaatharb.gsplat.ui.ProjectWizardController"
+            prefWidth="550" prefHeight="450">
+
+    <headerText>Create New Project</headerText>
+
+    <content>
+        <VBox spacing="12">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+            <!-- Step 1: Project name & location -->
+            <Label text="Project Name" styleClass="wizard-step-title"/>
+            <TextField fx:id="projectNameField" promptText="My Gaussian Splat Project"/>
+
+            <Label text="Project Location"/>
+            <HBox spacing="8">
+                <TextField fx:id="projectLocationField" promptText="Select a folder..."
+                           HBox.hgrow="ALWAYS" editable="false"/>
+                <Button text="Browse..." onAction="#onBrowseLocation"/>
+            </HBox>
+
+            <Separator/>
+
+            <!-- Step 2: Media input -->
+            <Label text="Input Media" styleClass="wizard-step-title"/>
+            <Label text="Choose images or a video file as source material." styleClass="wizard-description"/>
+
+            <HBox spacing="8">
+                <RadioButton fx:id="imagesRadio" text="Images" selected="true">
+                    <toggleGroup><ToggleGroup fx:id="mediaToggle"/></toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="videoRadio" text="Video">
+                    <toggleGroup><fx:reference source="mediaToggle"/></toggleGroup>
+                </RadioButton>
+            </HBox>
+
+            <!-- Images input -->
+            <VBox fx:id="imagesPane" spacing="6">
+                <HBox spacing="8">
+                    <Button text="Add Images..." onAction="#onAddImages"/>
+                    <Button text="Clear" onAction="#onClearImages"/>
+                </HBox>
+                <Label fx:id="imageCountLabel" text="No images selected"/>
+            </VBox>
+
+            <!-- Video input -->
+            <VBox fx:id="videoPane" spacing="6" visible="false" managed="false">
+                <HBox spacing="8">
+                    <TextField fx:id="videoPathField" promptText="Select video file..."
+                               HBox.hgrow="ALWAYS" editable="false"/>
+                    <Button text="Browse..." onAction="#onBrowseVideo"/>
+                </HBox>
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="Frame extraction FPS:"/>
+                    <Spinner fx:id="fpsSpinner" prefWidth="80"/>
+                </HBox>
+            </VBox>
+
+            <Separator/>
+
+            <!-- Summary -->
+            <Label fx:id="summaryLabel" text="" wrapText="true" styleClass="wizard-description"/>
+        </VBox>
+    </content>
+
+    <buttonTypes>
+        <ButtonType fx:constant="FINISH"/>
+        <ButtonType fx:constant="CANCEL"/>
+    </buttonTypes>
+</DialogPane>

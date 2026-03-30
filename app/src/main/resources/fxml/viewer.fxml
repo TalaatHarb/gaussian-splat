@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="net.talaatharb.gsplat.ui.ViewerController">
+
+    <!-- Top toolbar -->
+    <top>
+        <ToolBar>
+            <Button text="Open Splat..." onAction="#onOpenSplat" styleClass="toolbar-btn"/>
+            <Separator/>
+            <Button text="Reset Camera" onAction="#onResetCamera" styleClass="toolbar-btn"/>
+            <Button text="Screenshot" onAction="#onScreenshot" styleClass="toolbar-btn"/>
+        </ToolBar>
+    </top>
+
+    <!-- Center: WebView -->
+    <center>
+        <WebView fx:id="webView"/>
+    </center>
+
+    <!-- Right: Controls sidebar -->
+    <right>
+        <VBox spacing="12" prefWidth="200" styleClass="project-panel">
+            <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+
+            <Label text="Viewer Controls" styleClass="panel-title"/>
+
+            <Label text="Transparency"/>
+            <Slider fx:id="transparencySlider" min="0" max="1" value="1" showTickLabels="true"
+                    majorTickUnit="0.25"/>
+
+            <Label text="Point Scale"/>
+            <Slider fx:id="pointScaleSlider" min="0.1" max="5.0" value="1.0" showTickLabels="true"
+                    majorTickUnit="1.0"/>
+
+            <Separator/>
+
+            <Label text="Camera"/>
+            <Label text="Speed"/>
+            <Slider fx:id="cameraSpeedSlider" min="0.1" max="5.0" value="1.0"
+                    majorTickUnit="1.0" showTickLabels="true"/>
+
+            <Separator/>
+
+            <Label text="Loaded File" styleClass="panel-title"/>
+            <Label fx:id="fileInfoLabel" text="None" wrapText="true"
+                   style="-fx-font-size: 11px; -fx-text-fill: #969696;"/>
+        </VBox>
+    </right>
+</BorderPane>

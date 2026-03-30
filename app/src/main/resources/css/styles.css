@@ -1,0 +1,374 @@
+/*
+ * Gaussian Splat Studio - Dark Theme
+ */
+
+/* --- Root & Global --- */
+.root {
+    -fx-base: #2b2b2b;
+    -fx-background: #1e1e1e;
+    -fx-control-inner-background: #2b2b2b;
+    -fx-accent: #4a9eff;
+    -fx-focus-color: #4a9eff;
+    -fx-faint-focus-color: transparent;
+    -fx-text-fill: #cccccc;
+    -fx-font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+    -fx-font-size: 13px;
+}
+
+.root-pane {
+    -fx-background-color: #1e1e1e;
+}
+
+/* --- Menu Bar --- */
+.menu-bar {
+    -fx-background-color: #2d2d2d;
+    -fx-border-color: transparent transparent #3c3c3c transparent;
+}
+
+.menu-bar .menu {
+    -fx-background-color: transparent;
+}
+
+.menu-bar .menu .label {
+    -fx-text-fill: #cccccc;
+}
+
+.menu-bar .menu:hover,
+.menu-bar .menu:showing {
+    -fx-background-color: #3c3c3c;
+}
+
+.context-menu {
+    -fx-background-color: #2d2d2d;
+    -fx-border-color: #3c3c3c;
+}
+
+.menu-item {
+    -fx-background-color: transparent;
+}
+
+.menu-item .label {
+    -fx-text-fill: #cccccc;
+}
+
+.menu-item:hover,
+.menu-item:focused {
+    -fx-background-color: #094771;
+}
+
+/* --- Toolbar --- */
+.main-toolbar {
+    -fx-background-color: #2d2d2d;
+    -fx-border-color: transparent transparent #3c3c3c transparent;
+    -fx-padding: 4 8 4 8;
+}
+
+.toolbar-btn {
+    -fx-background-color: #3c3c3c;
+    -fx-text-fill: #cccccc;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+    -fx-padding: 4 12 4 12;
+    -fx-cursor: hand;
+}
+
+.toolbar-btn:hover {
+    -fx-background-color: #4a4a4a;
+}
+
+.toolbar-btn:pressed {
+    -fx-background-color: #094771;
+}
+
+/* --- Project Panel (Left) --- */
+.project-panel {
+    -fx-background-color: #252526;
+    -fx-border-color: transparent #3c3c3c transparent transparent;
+}
+
+.panel-title {
+    -fx-text-fill: #cccccc;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 4 0 4 4;
+    -fx-text-transform: uppercase;
+}
+
+/* --- Tree View --- */
+.tree-view {
+    -fx-background-color: #252526;
+    -fx-border-color: transparent;
+}
+
+.tree-view .tree-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cccccc;
+}
+
+.tree-view .tree-cell:selected {
+    -fx-background-color: #094771;
+    -fx-text-fill: #ffffff;
+}
+
+.tree-view .tree-cell:hover:!selected {
+    -fx-background-color: #2a2d2e;
+}
+
+/* --- Tab Pane --- */
+.tab-pane > .tab-header-area {
+    -fx-background-color: #252526;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: #252526;
+}
+
+.tab {
+    -fx-background-color: #2d2d2d;
+    -fx-border-color: transparent;
+}
+
+.tab .tab-label {
+    -fx-text-fill: #969696;
+}
+
+.tab:selected {
+    -fx-background-color: #1e1e1e;
+}
+
+.tab:selected .tab-label {
+    -fx-text-fill: #ffffff;
+}
+
+.tab:hover:!selected .tab-label {
+    -fx-text-fill: #cccccc;
+}
+
+.tab-pane > .tab-content-area {
+    -fx-background-color: #1e1e1e;
+}
+
+/* --- Log Panel (Bottom) --- */
+.log-panel {
+    -fx-background-color: #1e1e1e;
+    -fx-border-color: #3c3c3c transparent transparent transparent;
+}
+
+.log-console {
+    -fx-control-inner-background: #1e1e1e;
+    -fx-text-fill: #4ec9b0;
+    -fx-font-family: "Cascadia Code", "Consolas", "Courier New", monospace;
+    -fx-font-size: 12px;
+    -fx-border-color: #3c3c3c;
+    -fx-border-radius: 2;
+}
+
+/* --- Buttons --- */
+.button {
+    -fx-background-color: #3c3c3c;
+    -fx-text-fill: #cccccc;
+    -fx-background-radius: 3;
+    -fx-border-radius: 3;
+    -fx-padding: 6 14 6 14;
+    -fx-cursor: hand;
+}
+
+.button:hover {
+    -fx-background-color: #4a4a4a;
+}
+
+.button:pressed {
+    -fx-background-color: #094771;
+}
+
+.button:default {
+    -fx-background-color: #0e639c;
+    -fx-text-fill: #ffffff;
+}
+
+.button:default:hover {
+    -fx-background-color: #1177bb;
+}
+
+/* --- Text Fields --- */
+.text-field, .text-area {
+    -fx-control-inner-background: #3c3c3c;
+    -fx-text-fill: #cccccc;
+    -fx-prompt-text-fill: #6c6c6c;
+    -fx-border-color: #3c3c3c;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+}
+
+.text-field:focused, .text-area:focused {
+    -fx-border-color: #4a9eff;
+}
+
+/* --- Labels --- */
+.label {
+    -fx-text-fill: #cccccc;
+}
+
+/* --- Sliders --- */
+.slider .track {
+    -fx-background-color: #3c3c3c;
+}
+
+.slider .thumb {
+    -fx-background-color: #4a9eff;
+}
+
+/* --- Progress Bar --- */
+.progress-bar .track {
+    -fx-background-color: #3c3c3c;
+}
+
+.progress-bar .bar {
+    -fx-background-color: #4a9eff;
+}
+
+/* --- Scroll Bars (thin, dark) --- */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #424242;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #4f4f4f;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.scroll-bar .increment-arrow,
+.scroll-bar .decrement-arrow {
+    -fx-shape: "";
+    -fx-padding: 0;
+}
+
+/* --- Combo Box --- */
+.combo-box {
+    -fx-background-color: #3c3c3c;
+    -fx-border-color: #3c3c3c;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #cccccc;
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #2d2d2d;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #094771;
+}
+
+/* --- Charts --- */
+.chart {
+    -fx-background-color: #1e1e1e;
+}
+
+.chart-plot-background {
+    -fx-background-color: #252526;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+}
+
+.axis {
+    -fx-tick-label-fill: #969696;
+}
+
+.axis-label {
+    -fx-text-fill: #cccccc;
+}
+
+.chart-series-line {
+    -fx-stroke: #4a9eff;
+    -fx-stroke-width: 2;
+}
+
+/* --- Dialog Pane --- */
+.dialog-pane {
+    -fx-background-color: #2d2d2d;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #252526;
+}
+
+.dialog-pane .header-panel .label {
+    -fx-text-fill: #cccccc;
+    -fx-font-size: 15px;
+}
+
+/* --- Separator --- */
+.separator .line {
+    -fx-border-color: #3c3c3c;
+}
+
+/* --- Spinner (for numeric inputs) --- */
+.spinner {
+    -fx-background-color: #3c3c3c;
+}
+
+.spinner .text-field {
+    -fx-background-color: #3c3c3c;
+}
+
+/* --- Check Box --- */
+.check-box .box {
+    -fx-background-color: #3c3c3c;
+    -fx-border-color: #5a5a5a;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #0e639c;
+    -fx-border-color: #0e639c;
+}
+
+.check-box .mark {
+    -fx-background-color: #ffffff;
+}
+
+/* --- Wizard-specific --- */
+.wizard-step-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0 0 8 0;
+}
+
+.wizard-description {
+    -fx-text-fill: #969696;
+    -fx-font-size: 12px;
+    -fx-padding: 0 0 12 0;
+}
+
+/* --- Pipeline Stepper --- */
+.pipeline-step {
+    -fx-padding: 8;
+    -fx-background-color: #2d2d2d;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+
+.pipeline-step-active {
+    -fx-border-color: #4a9eff;
+    -fx-border-width: 1;
+}
+
+.pipeline-step-complete {
+    -fx-border-color: #4ec9b0;
+    -fx-border-width: 1;
+}
