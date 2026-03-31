@@ -19,6 +19,8 @@ public class ColmapService {
     private final StringProperty currentStage = new SimpleStringProperty("Idle");
     private final StringProperty statusMessage = new SimpleStringProperty("");
 
+    private static final int NUM_THREADS = Math.max(1, Runtime.getRuntime().availableProcessors() - 1);
+
     private String colmapPath;
 
     public ColmapService(String colmapPath) {
@@ -68,7 +70,8 @@ public class ColmapService {
         List<String> command = List.of(
                 colmapPath, "feature_extractor",
                 "--database_path", dbPath.toString(),
-                "--image_path", imagePath.toString()
+                "--image_path", imagePath.toString(),
+                "--SiftExtraction.num_threads", String.valueOf(NUM_THREADS)
         );
 
         return orchestrator.run(command, null, Map.of(), logHandler, logHandler);
@@ -82,7 +85,8 @@ public class ColmapService {
 
         List<String> command = List.of(
                 colmapPath, "exhaustive_matcher",
-                "--database_path", dbPath.toString()
+                "--database_path", dbPath.toString(),
+                "--SiftMatching.num_threads", String.valueOf(NUM_THREADS)
         );
 
         return orchestrator.run(command, null, Map.of(), logHandler, logHandler);
