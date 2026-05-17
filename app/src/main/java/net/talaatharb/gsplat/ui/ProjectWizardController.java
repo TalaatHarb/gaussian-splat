@@ -166,12 +166,14 @@ public class ProjectWizardController {
         String extension = dotIndex >= 0 ? fileName.substring(dotIndex) : "";
 
         int counter = 1;
-        while (true) {
+        while (counter <= 1000) {
             Path candidate = directory.resolve(baseName + "-" + counter + extension);
             if (!Files.exists(candidate)) {
                 return candidate;
             }
             counter++;
         }
+
+        throw new IllegalStateException("Too many duplicate image names in " + directory);
     }
 }

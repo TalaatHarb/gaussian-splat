@@ -249,9 +249,7 @@ public class PipelineService {
                     if (exc != null) {
                         throw exc;
                     }
-                    if (!dir.equals(directory)) {
-                        Files.deleteIfExists(dir);
-                    }
+                    Files.deleteIfExists(dir);
                     return FileVisitResult.CONTINUE;
                 }
             });
