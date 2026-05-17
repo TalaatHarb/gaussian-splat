@@ -17,7 +17,7 @@
 
             <Label text="Source Path:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
             <HBox spacing="6" GridPane.rowIndex="0" GridPane.columnIndex="1">
-                <TextField fx:id="sourcePathField" promptText="COLMAP output directory"
+                <TextField fx:id="sourcePathField" promptText="COLMAP or VGGT reconstruction directory"
                            HBox.hgrow="ALWAYS"/>
                 <Button text="Browse..." onAction="#onBrowseSource"/>
             </HBox>

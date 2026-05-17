@@ -6,7 +6,7 @@
 
 <DialogPane xmlns:fx="http://javafx.com/fxml"
             fx:controller="net.talaatharb.gsplat.ui.SettingsController"
-            prefWidth="600" prefHeight="480">
+            prefWidth="640" prefHeight="620">
 
     <headerText>Application Settings</headerText>
 
@@ -20,6 +20,9 @@
             <Button text="Auto-Detect All" onAction="#onAutoDetect" styleClass="toolbar-btn"/>
 
             <Separator/>
+
+            <Label text="Reconstruction Backend"/>
+            <ComboBox fx:id="reconstructionBackendCombo" promptText="Choose reconstruction backend"/>
 
             <!-- FFmpeg -->
             <Label text="FFmpeg"/>
@@ -36,6 +39,15 @@
                            HBox.hgrow="ALWAYS"/>
                 <Button text="Browse..." onAction="#onBrowseColmap"/>
             </HBox>
+
+            <!-- VGGT -->
+            <Label text="VGGT Repository"/>
+            <HBox spacing="8">
+                <TextField fx:id="vggtRepoPathField" promptText="Path to local vggt repo"
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="Browse..." onAction="#onBrowseVggtRepo"/>
+            </HBox>
+            <CheckBox fx:id="vggtBundleAdjustmentCheck" text="Use VGGT bundle adjustment (slower, often higher quality)"/>
 
             <!-- Python -->
             <Label text="Python Interpreter"/>

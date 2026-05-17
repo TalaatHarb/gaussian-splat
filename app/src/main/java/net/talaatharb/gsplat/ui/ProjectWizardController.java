@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,6 +118,8 @@ public class ProjectWizardController {
         String name = projectNameField.getText().trim();
         String location = projectLocationField.getText().trim();
         if (name.isEmpty() || location.isEmpty()) return null;
+        if (imagesRadio.isSelected() && selectedImages.isEmpty()) return null;
+        if (videoRadio.isSelected() && videoPathField.getText().isBlank()) return null;
 
         Path basePath = Path.of(location, name);
         Project project = new Project(name, basePath.toString());
@@ -126,18 +129,49 @@ public class ProjectWizardController {
             Files.createDirectories(project.getColmapDir());
             Files.createDirectories(project.getOutputDir());
             Files.createDirectories(project.getSplatsDir());
+
+            if (imagesRadio.isSelected()) {
+                List<String> paths = copyImagesToProjectInput(project);
+                project.setInputImages(paths);
+            } else {
+                project.setInputVideo(videoPathField.getText());
+                project.setVideoFps(fpsSpinner.getValue());
+            }
         } catch (IOException e) {
             return null;
         }
 
-        if (imagesRadio.isSelected()) {
-            List<String> paths = selectedImages.stream().map(File::getAbsolutePath).toList();
-            project.setInputImages(paths);
-        } else {
-            project.setInputVideo(videoPathField.getText());
-            project.setVideoFps(fpsSpinner.getValue());
+        return project;
+    }
+
+    private List<String> copyImagesToProjectInput(Project project) throws IOException {
+        List<String> copiedPaths = new ArrayList<>();
+        for (File image : selectedImages) {
+            Path source = image.toPath();
+            Path target = uniqueTargetPath(project.getInputDir(), image.getName());
+            Files.copy(source, target, StandardCopyOption.REPLACE_EXISTING);
+            copiedPaths.add(target.toString());
+        }
+        return copiedPaths;
+    }
+
+    private Path uniqueTargetPath(Path directory, String fileName) {
+        Path target = directory.resolve(fileName);
+        if (!Files.exists(target)) {
+            return target;
         }
 
-        return project;
+        int dotIndex = fileName.lastIndexOf('.');
+        String baseName = dotIndex >= 0 ? fileName.substring(0, dotIndex) : fileName;
+        String extension = dotIndex >= 0 ? fileName.substring(dotIndex) : "";
+
+        int counter = 1;
+        while (true) {
+            Path candidate = directory.resolve(baseName + "-" + counter + extension);
+            if (!Files.exists(candidate)) {
+                return candidate;
+            }
+            counter++;
+        }
     }
 }

@@ -60,7 +60,7 @@ public class TrainingPanelController {
     @FXML
     private void onBrowseSource() {
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Select Source (COLMAP output)");
+        chooser.setTitle("Select Source (reconstruction output)");
         File dir = chooser.showDialog(sourcePathField.getScene().getWindow());
         if (dir != null) sourcePathField.setText(dir.getAbsolutePath());
     }
