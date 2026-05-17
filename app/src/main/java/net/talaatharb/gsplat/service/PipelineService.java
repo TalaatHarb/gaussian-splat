@@ -236,20 +236,11 @@ public class PipelineService {
     private void recreateDirectory(Path directory) throws IOException {
         if (Files.exists(directory)) {
             try (Stream<Path> files = Files.walk(directory)) {
-                files.sorted(Comparator.reverseOrder())
-                        .filter(path -> !path.equals(directory))
-                        .forEach(path -> {
-                            try {
-                                Files.deleteIfExists(path);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-            } catch (RuntimeException e) {
-                if (e.getCause() instanceof IOException ioException) {
-                    throw ioException;
+                for (Path path : files.sorted(Comparator.reverseOrder()).toList()) {
+                    if (!path.equals(directory)) {
+                        Files.deleteIfExists(path);
+                    }
                 }
-                throw e;
             }
         }
         Files.createDirectories(directory);
