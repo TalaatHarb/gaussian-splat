@@ -2,8 +2,11 @@ package net.talaatharb.gsplat.model;
 
 public class AppSettings {
 
+    private ReconstructionBackend reconstructionBackend = ReconstructionBackend.COLMAP;
     private String ffmpegPath;
     private String colmapPath;
+    private String vggtRepoPath;
+    private boolean vggtUseBundleAdjustment;
     private String pythonPath;
     private String gaussianSplattingRepoPath;
     private String condaPath;
@@ -12,11 +15,22 @@ public class AppSettings {
 
     public AppSettings() {}
 
+    public ReconstructionBackend getReconstructionBackend() { return reconstructionBackend; }
+    public void setReconstructionBackend(ReconstructionBackend reconstructionBackend) {
+        this.reconstructionBackend = reconstructionBackend == null ? ReconstructionBackend.COLMAP : reconstructionBackend;
+    }
+
     public String getFfmpegPath() { return ffmpegPath; }
     public void setFfmpegPath(String ffmpegPath) { this.ffmpegPath = ffmpegPath; }
 
     public String getColmapPath() { return colmapPath; }
     public void setColmapPath(String colmapPath) { this.colmapPath = colmapPath; }
+
+    public String getVggtRepoPath() { return vggtRepoPath; }
+    public void setVggtRepoPath(String vggtRepoPath) { this.vggtRepoPath = vggtRepoPath; }
+
+    public boolean isVggtUseBundleAdjustment() { return vggtUseBundleAdjustment; }
+    public void setVggtUseBundleAdjustment(boolean vggtUseBundleAdjustment) { this.vggtUseBundleAdjustment = vggtUseBundleAdjustment; }
 
     public String getPythonPath() { return pythonPath; }
     public void setPythonPath(String pythonPath) { this.pythonPath = pythonPath; }

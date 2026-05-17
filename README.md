@@ -34,7 +34,8 @@ Takes images or video as input, runs the full reconstruction pipeline (frame ext
 |------|---------|---------|---------|
 | **Java JDK** | 21+ | Application runtime | [Adoptium](https://adoptium.net/) or [Oracle](https://www.oracle.com/java/technologies/downloads/) |
 | **Maven** | 3.9+ | Build tool | [maven.apache.org](https://maven.apache.org/download.cgi) |
-| **COLMAP** | 3.8+ | Camera pose estimation (Structure-from-Motion) | [colmap.github.io](https://colmap.github.io/install.html) |
+| **COLMAP** | 3.8+ | Camera pose estimation (optional when using COLMAP backend) | [colmap.github.io](https://colmap.github.io/install.html) |
+| **VGGT repo** | latest | Fast feed-forward reconstruction backend | `git clone https://github.com/facebookresearch/vggt` |
 | **Python** | 3.8+ | Runs the 3DGS training script | [python.org](https://www.python.org/downloads/) |
 | **Gaussian Splatting repo** | — | Training scripts | `git clone https://github.com/graphdeco-inria/gaussian-splatting` |
 | **FFmpeg** | 5.0+ | Video frame extraction | [ffmpeg.org](https://ffmpeg.org/download.html) |
@@ -67,6 +68,17 @@ python -m venv venv
 pip install -r requirements.txt
 ```
 
+### Setting Up the VGGT Environment
+
+```bash
+git clone https://github.com/facebookresearch/vggt.git
+cd vggt
+pip install -r requirements.txt
+
+# Optional, but needed for --use_ba inside the app
+pip install -r requirements_demo.txt
+```
+
 ---
 
 ## Installation
@@ -93,15 +105,18 @@ mvn clean compile
 
    | Field | What to set |
    |-------|-------------|
+   | Reconstruction Backend | Choose `COLMAP (SfM)` or `VGGT` |
    | FFmpeg | Path to `ffmpeg` (or `ffmpeg.exe` on Windows) |
-   | COLMAP | Path to `colmap` (or `colmap.exe`) |
-   | Python | Path to the Python interpreter with 3DGS dependencies installed |
+   | COLMAP | Path to `colmap` (or `colmap.exe`) when using the COLMAP backend |
+   | VGGT Repository | Folder where you cloned `vggt` when using the VGGT backend |
+   | Python | Path to the Python interpreter with VGGT + 3DGS dependencies installed |
    | Gaussian Splatting Repository | Folder where you cloned `gaussian-splatting` |
    | Conda (optional) | Path to `conda` executable |
    | Conda Env Name (optional) | e.g. `gaussian_splatting` |
+   | VGGT Bundle Adjustment | Optional quality pass for VGGT; leave off for the fastest workflow |
    | GPU Device | GPU index (0 for first GPU, 1 for second, etc.) |
 
-4. Click **Apply** to save. Settings are stored at `~/.gsplat/settings.json`.
+4. Click **Apply** to save. Settings are stored at `~/.gsplat/settings.properties`.
 
 ---
 
@@ -138,7 +153,7 @@ Best for when you have a video walkthrough or orbit of a subject.
 The automated pipeline runs all stages end-to-end:
 
 ```
-Video → FFmpeg (frame extraction) → COLMAP (SfM) → 3DGS Training → .ply splat file
+Video → FFmpeg (frame extraction) → COLMAP or VGGT → 3DGS Training → .ply splat file
 ```
 
 If you started from images, the FFmpeg step is skipped automatically.
@@ -152,6 +167,7 @@ The pipeline stages and their approximate progress:
 | COLMAP Feature Extraction | 20–30% | Detects visual features (SIFT) in each image |
 | COLMAP Matching | 30–40% | Finds matching features between image pairs |
 | COLMAP Mapping | 40–50% | Reconstructs 3D point cloud and camera poses |
+| VGGT Reconstruction | 20–50% | Runs `demo_colmap.py` and exports COLMAP-compatible poses in one pass |
 | 3DGS Training | 50–100% | Trains the Gaussian Splat model (GPU-intensive) |
 
 ### Training Manually
@@ -159,7 +175,7 @@ The pipeline stages and their approximate progress:
 For more control over the training process:
 
 1. Switch to the **Training** tab.
-2. Set the **Source Path** — point to your COLMAP output directory (the one containing the `sparse/` folder).
+2. Set the **Source Path** — point to your reconstruction directory (COLMAP or VGGT, the one containing the `sparse/` folder).
 3. Set the **Output Path** — where the trained model will be saved.
 4. Adjust [training parameters](#training-parameters) as needed (or keep defaults).
 5. Click **Start Training**.
@@ -228,7 +244,8 @@ When you create a project, the following directory structure is created:
 ```
 MyProject/
 ├── input/          # Source images (or extracted video frames)
-├── colmap/         # COLMAP workspace
+├── colmap/         # Reconstruction workspace used by COLMAP or VGGT
+│   ├── images/     # Staged images used for reconstruction/training
 │   ├── database.db # Feature database
 │   └── sparse/     # Reconstructed camera poses & 3D points
 │       └── 0/
@@ -325,6 +342,10 @@ mvn clean package
 ### COLMAP fails with "too few images"
 - COLMAP needs sufficient overlap between images. Ensure you have at least 20–30 images with good coverage of the scene.
 - Images should have at least 60–70% overlap between consecutive views.
+
+### VGGT reconstruction fails immediately
+- Verify the configured Python environment includes VGGT's dependencies and that the local `vggt` checkout contains `demo_colmap.py`.
+- Try disabling **VGGT Bundle Adjustment** first; it is slower and pulls in extra dependencies such as `pycolmap`.
 
 ### Training fails immediately
 - Verify your Python environment has all gaussian-splatting dependencies installed.

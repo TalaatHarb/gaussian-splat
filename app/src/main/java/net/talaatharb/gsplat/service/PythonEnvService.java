@@ -1,6 +1,7 @@
 package net.talaatharb.gsplat.service;
 
 import net.talaatharb.gsplat.model.AppSettings;
+import net.talaatharb.gsplat.model.ReconstructionBackend;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,8 +25,13 @@ public class PythonEnvService {
                 try (InputStream in = Files.newInputStream(SETTINGS_FILE)) {
                     props.load(in);
                 }
+                settings.setReconstructionBackend(ReconstructionBackend.fromValue(
+                        props.getProperty("reconstructionBackend", ReconstructionBackend.COLMAP.name())));
                 settings.setFfmpegPath(props.getProperty("ffmpegPath", ""));
                 settings.setColmapPath(props.getProperty("colmapPath", ""));
+                settings.setVggtRepoPath(props.getProperty("vggtRepoPath", ""));
+                settings.setVggtUseBundleAdjustment(Boolean.parseBoolean(
+                        props.getProperty("vggtUseBundleAdjustment", "false")));
                 settings.setPythonPath(props.getProperty("pythonPath", ""));
                 settings.setGaussianSplattingRepoPath(props.getProperty("gaussianSplattingRepoPath", ""));
                 settings.setCondaPath(props.getProperty("condaPath", ""));
@@ -46,8 +52,11 @@ public class PythonEnvService {
     public void saveSettings(AppSettings settings) throws IOException {
         Files.createDirectories(SETTINGS_DIR);
         Properties props = new Properties();
+        props.setProperty("reconstructionBackend", settings.getReconstructionBackend().name());
         props.setProperty("ffmpegPath", valueOrEmpty(settings.getFfmpegPath()));
         props.setProperty("colmapPath", valueOrEmpty(settings.getColmapPath()));
+        props.setProperty("vggtRepoPath", valueOrEmpty(settings.getVggtRepoPath()));
+        props.setProperty("vggtUseBundleAdjustment", Boolean.toString(settings.isVggtUseBundleAdjustment()));
         props.setProperty("pythonPath", valueOrEmpty(settings.getPythonPath()));
         props.setProperty("gaussianSplattingRepoPath", valueOrEmpty(settings.getGaussianSplattingRepoPath()));
         props.setProperty("condaPath", valueOrEmpty(settings.getCondaPath()));
